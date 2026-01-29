@@ -10,14 +10,15 @@ import { useState } from "react";
 import { KeyboardAvoidingView, ScrollView } from "react-native";
 
 export default function Login() {
-    const { authenticate, isLoadingAuth } = useAuth()
+    const { authenticate, isLoadingAuth } = useAuth();
 
     const [authMode, setAuthMode] = useState<"login" | "register">("login");
-    const [password, setPassword] = useState("")
-    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("");
 
     async function onAuthenticate() {
-        await authenticate(authMode, email, password)
+        console.log("Attempting to authenticate with:", email);
+        await authenticate(authMode, email, password);
     }
 
     function onToggleAuthMode() {
