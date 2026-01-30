@@ -6,6 +6,7 @@ import { Text } from "@/components/Text";
 import { VStack } from "@/components/VStack";
 import { useAuth } from "@/context/AuthContext";
 import { eventService } from "@/services/event";
+import { ticketService } from "@/services/ticket";
 import { Event } from "@/types/event";
 import { UserRole } from "@/types/user";
 import { useFocusEffect } from "@react-navigation/native";
@@ -28,9 +29,8 @@ export default function EventsScreen() {
 
     async function buyTicket(id: number) {
         try {
-            // await ticketService.createOne(id);
+            await ticketService.createOne(id);
             Alert.alert("Success", "Ticket purchased successfully");
-            fetchEvents();
         } catch (error) {
             Alert.alert("Error", "Failed to buy ticket");
         }

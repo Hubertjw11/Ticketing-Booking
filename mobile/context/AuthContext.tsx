@@ -2,7 +2,7 @@ import { userService } from "@/services/user";
 import { User } from "@/types/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter, router } from "expo-router";
-import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
+import React, { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
 
 interface AuthContextProps {
     isLoggedIn: boolean;
@@ -41,7 +41,7 @@ export function AuthenticationProvider({ children }: PropsWithChildren) {
         checkIfLoggedIn();
     }, []);
 
-    async function authenticate(authMode: "login" | "register", email: string, password: string): Promise<void> {
+    async function authenticate(authMode: "login" | "register", email: string, password: string) {
         try {
             setIsLoadingAuth(true);
 
@@ -51,16 +51,16 @@ export function AuthenticationProvider({ children }: PropsWithChildren) {
                 const {data} = response
                 const { user, token } = response.data;
 
-                await AsyncStorage.setItem("token", token);
-                await AsyncStorage.setItem("user", JSON.stringify(user));
-                setUser(user);
+                await AsyncStorage.setItem("token", response.data.token);
+                await AsyncStorage.setItem("user", JSON.stringify(response.data.user));
+                setUser(response.data.user);
                 router.replace("/");
                 setIsLoggedIn(true);
             }
         } catch (error) {
-            setIsLoggedIn(false)
+            setIsLoggedIn(false);
         } finally {
-            setIsLoadingAuth(false)
+            setIsLoadingAuth(false);
         }
     }
 

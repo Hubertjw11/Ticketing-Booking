@@ -1,5 +1,5 @@
 import { Text } from "react-native";
-import { Tabs } from "expo-router";
+import { Href, Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons"
 import { ComponentProps } from "react";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
@@ -57,7 +57,7 @@ export default function TabLayout() {
                     options={{
                         ...tab.options,
                         headerTitle: tab.displayName,
-                        href: (tab.showFor.includes(user?.role!) ? tab.name : null) as any,
+                        href: tab.showFor.includes(user?.role!) ? (tab.name as Href) : null,
                         tabBarLabel: ({ focused }) => (
                             <Text style={{ color: focused ? "black" : "gray", fontSize: 12 }}>
                                 {tab.displayName}
