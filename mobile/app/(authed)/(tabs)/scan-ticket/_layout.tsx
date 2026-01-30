@@ -1,3 +1,48 @@
+import { Button } from "@/components/Button";
+import { Text } from "@/components/Text";
+import { VStack } from "@/components/VStack";
+import { BarcodeScanningResult, CameraView, useCameraPermissions } from "expo-camera";
+import { useState } from "react";
+import { ActivityIndicator, Alert } from "react-native";
+
 export default function ScanTicketScreen() {
-    return <></>;
+    const [permission, requestPermission] = useCameraPermissions();
+    const [scanningEnabled, setScanningEnabled] = useState(true);
+
+    if (!permission) {
+        return (
+            <VStack flex={1} justifyContent="center" alignItems="center">
+                <ActivityIndicator size="large" />
+            </VStack>
+        );
+    }
+
+    if (!permission.granted) {
+        return (
+            <VStack gap={20} flex={1} justifyContent="center" alignItems="center">
+                <Text>Camera access is required to scan Tickets!</Text>
+                <Button onPress={requestPermission}>Allow Camera Access</Button>
+            </VStack>
+        );
+    }
+
+    async function onBarcodeScanned({ data }: BarcodeScanningResult) {
+        if (!scanningEnabled) return;
+
+        try {
+            console.log(data);
+        } catch (error) {
+            Alert.alert("Error", "Failed to validate Ticket. Please try again!");
+            setScanningEnabled(true);
+        }
+    }
+
+    return (
+        <CameraView
+            style={{ flex: 1 }}
+            facing="back"
+            onBarcodeScanned={onBarcodeScanned}
+            barcodeScannerSettings={{ barcodeTypes: ["qr"] }}
+        />
+    )
 }

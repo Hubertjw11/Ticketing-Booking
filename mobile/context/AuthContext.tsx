@@ -68,6 +68,7 @@ export function AuthenticationProvider({ children }: PropsWithChildren) {
         setIsLoggedIn(false);
         await AsyncStorage.removeItem("token");
         await AsyncStorage.removeItem("user");
+        router.replace("/login");
     }
 
     return (
