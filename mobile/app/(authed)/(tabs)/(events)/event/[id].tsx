@@ -1,11 +1,12 @@
 import { Button } from "@/components/Button";
+import DateTimePicker from "@/components/DateTimePicker";
 import { Input } from "@/components/Input";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Text } from "@/components/Text";
-import { VStack } from "@/components/VStack";
-import { useOnScreenListener } from "@/hooks/useOnScreenListener";
+import { VStack } from "@/components/VStack"; 
 import { eventService } from "@/services/event";
 import { Event } from "@/types/event";
+import { useFocusEffect } from "@react-navigation/native";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { Alert } from "react-native";
@@ -18,7 +19,7 @@ export default function EventDetailScreen() {
     const [eventData, setEventData] = useState<Event | null>(null);
 
     function updateField(field: keyof Event, value: string | Date) {
-        setEventData(prev => ({
+        setEventData((prev) => ({
             ...prev!,
             [field]: value
         }));
@@ -61,16 +62,16 @@ export default function EventDetailScreen() {
         }
     }
 
-    const fetchEvent = useCallback(async () => {
+    const fetchEvent = async () => {
         try {
             const response = await eventService.getOne(Number(id));
             setEventData(response.data);
         } catch (error) {
             router.back();
         }
-    }, [id, router]);
+    };
 
-    useOnScreenListener("focus", fetchEvent);
+    useFocusEffect(useCallback(() => { fetchEvent(); }, []));
 
     useEffect(() => {
         navigation.setOptions({
@@ -108,7 +109,10 @@ export default function EventDetailScreen() {
 
             <VStack gap={5}>
                 <Text ml={10} fontSize={14} color="gray">Date</Text>
-                {/* DateTimePicker */}
+                <DateTimePicker
+                    onChange={(date) => updateField("date", date || new Date())}
+                    currentDate={new Date(eventData?.date || new Date())}
+                />
             </VStack>
 
             <Button

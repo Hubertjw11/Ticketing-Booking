@@ -5,10 +5,10 @@ import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Text } from "@/components/Text";
 import { VStack } from "@/components/VStack";
 import { useAuth } from "@/context/AuthContext";
-import { useOnScreenListener } from "@/hooks/useOnScreenListener";
 import { eventService } from "@/services/event";
 import { Event } from "@/types/event";
 import { UserRole } from "@/types/user";
+import { useFocusEffect } from "@react-navigation/native";
 import { router, useNavigation } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { Alert, FlatList, TouchableOpacity } from "react-native";
@@ -26,16 +26,17 @@ export default function EventsScreen() {
         }
     }
 
-    function buyTicket(id: number) {
+    async function buyTicket(id: number) {
         try {
             // await ticketService.createOne(id);
             Alert.alert("Success", "Ticket purchased successfully");
+            fetchEvents();
         } catch (error) {
             Alert.alert("Error", "Failed to buy ticket");
         }
     }
 
-    const fetchEvents = useCallback(async () => {
+    const fetchEvents = async () => {
         try {
             setIsLoading(true);
             const response = await eventService.getAll();
@@ -45,18 +46,16 @@ export default function EventsScreen() {
         } finally {
             setIsLoading(false)
         }
-    }, []);
+    };
 
-    useOnScreenListener("focus", fetchEvents);
+    useFocusEffect(useCallback(() => { fetchEvents(); }, []));
 
     useEffect(() => {
-        fetchEvents();
-
         navigation.setOptions({
             headerTitle: "Events",
             headerRight: user?.role === UserRole.Manager ? headerRight : null,
-        })
-    }, [fetchEvents, navigation]);
+        });
+    }, [navigation, user]);
 
     return (
         <VStack flex={1} p={20} pb={0} gap={20}>
@@ -124,9 +123,7 @@ export default function EventsScreen() {
 const headerRight = () => {
     return (
         <TabBarIcon
-            size={32
-                
-            }
+            size={32}
             name="add-circle-outline"
             onPress={() => router.push("/(authed)/(tabs)/(events)/new")} />
     )
