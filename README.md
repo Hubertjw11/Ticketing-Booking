@@ -9,7 +9,7 @@ This repository contains a **full-stack ticketing and booking application**. It 
 | Component | Technologies |
 | :--- | :--- |
 | **Backend** | 🐹 `Go` · 🚀 `Fiber` · 🗄️ `GORM` · 🐘 `PostgreSQL` · 🔐 `JWT` · 🐳 `Docker` |
-| **Mobile** | 📱 `React Native` · 🌌 `Expo` · 📘 `TypeScript` · 🔗 `Axios` |
+| **Frontend** | 📱 `React Native` · 🌌 `Expo` · 📘 `TypeScript` · 🔗 `Axios` |
 
 ---
 
