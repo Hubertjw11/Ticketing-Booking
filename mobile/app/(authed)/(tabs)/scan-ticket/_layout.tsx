@@ -1,6 +1,7 @@
 import { Button } from "@/components/Button";
 import { Text } from "@/components/Text";
 import { VStack } from "@/components/VStack";
+import { ticketService } from "@/services/ticket";
 import { BarcodeScanningResult, CameraView, useCameraPermissions } from "expo-camera";
 import { useState } from "react";
 import { ActivityIndicator, Alert, Vibration } from "react-native";
@@ -37,7 +38,12 @@ export default function ScanTicketScreen() {
             const ticketId = parseInt(ticket.split(":")[1]);
             const ownerId = parseInt(owner.split(":")[1]);
 
-            console.log({ ticketId, ownerId });
+            await ticketService.validateOne(ticketId, ownerId);
+
+            Alert.alert("Success", "Ticket Validated!", [
+                { text: "Ok", onPress: () => setScanningEnabled(true) }
+            ]);
+
         } catch (error) {
             Alert.alert("Error", "Failed to validate Ticket. Please try again!");
             setScanningEnabled(true);
