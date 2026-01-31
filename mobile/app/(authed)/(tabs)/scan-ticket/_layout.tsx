@@ -3,7 +3,7 @@ import { Text } from "@/components/Text";
 import { VStack } from "@/components/VStack";
 import { BarcodeScanningResult, CameraView, useCameraPermissions } from "expo-camera";
 import { useState } from "react";
-import { ActivityIndicator, Alert } from "react-native";
+import { ActivityIndicator, Alert, Vibration } from "react-native";
 
 export default function ScanTicketScreen() {
     const [permission, requestPermission] = useCameraPermissions();
@@ -30,7 +30,14 @@ export default function ScanTicketScreen() {
         if (!scanningEnabled) return;
 
         try {
-            console.log(data);
+            Vibration.vibrate();
+            setScanningEnabled(false);
+
+            const [ticket, owner] = data.split(",");
+            const ticketId = parseInt(ticket.split(":")[1]);
+            const ownerId = parseInt(owner.split(":")[1]);
+
+            console.log({ ticketId, ownerId });
         } catch (error) {
             Alert.alert("Error", "Failed to validate Ticket. Please try again!");
             setScanningEnabled(true);

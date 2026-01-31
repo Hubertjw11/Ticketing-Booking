@@ -20,7 +20,7 @@ export default function TicketDetailScreen() {
             setTicket(data.ticket);
             setQrcode(data.qrcode);
         } catch (error) {
-            router.back()
+            router.back();
         }
     }
 
